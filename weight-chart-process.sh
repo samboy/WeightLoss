@@ -25,9 +25,10 @@ cat weight-chart | awk '
 	       print "Day,Weight"
 	       zstart = -1
 	       zjday = -1
+	       jcounter = 0
 	   }
 
-	       {year = $1
+	       {year = $1 + 0
 	        month = $2 + 0
 	        day = $3 + 0
 		weight = $5
@@ -37,12 +38,24 @@ cat weight-chart | awk '
 		    jday = leapyear[month] + day
 		}
 		print $1 "-" $2 "-" $3 "," weight
-		w[jday] = weight
+
+		# For seven day averages, to keep the code simple, we
+		# assume one weighing per day
+		jcounter++
+		w[jcounter] = weight # Weight on a given day
+		if(jcounter > 1) {
+			delta[jcounter] = weight - w[jcounter - 1]
+		}
+
 		if(zstart == -1) {zjday = jday 
 		                  zstart = weight}
 		}
 	END {avg = ((weight - zstart) / (jday - zjday)) * -1
-	     wavg = ((weight - w[jday - 7]) / 7) * -1
+	     deltasum = 0
+	     for(counter = 0; counter < 7; counter++) {
+	     	deltasum += delta[jcounter - counter]
+ 	     }
+	     wavg = (deltasum / counter) * -1
              print "Daily weight loss (overall): " avg | "cat 1>&2"
 	     print "Daily weight loss (last week): " wavg | "cat 1>&2"
 	     }
