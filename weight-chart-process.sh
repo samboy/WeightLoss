@@ -32,7 +32,7 @@ cat weight-chart | awk '
 	        month = $2 + 0
 	        day = $3 + 0
 		weight = $5
-		if(year % 4 != 0) { # Good until 2100, I’ll be dead by then
+		if(year % 4 != 0 || year == 2100) { # Good until 2400
 		    jday = julian[month] + day
 		} else {
 		    jday = leapyear[month] + day
