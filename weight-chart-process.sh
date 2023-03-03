@@ -22,40 +22,47 @@ cat weight-chart | awk '
 		       leapyear[month]++
 		   }
 	       }
+
+	       # How many days since 2000 on January 1 of a given year
+	       jdays[2000] = 0
+	       for(year = 2001; year < 2200; year++) {
+	           jdays[year] = jdays[year - 1] + 365
+		   if(year % 4 == 0 && year != 2100) { # Good until 2200
+                      jdays[year]++
+		   }
+	       }
+
 	       print "Day,Weight"
 	       zstart = -1
 	       zjday = -1
 	       jcounter = 0
+	       lastjday = 0
 	   }
 
 	       {year = $1 + 0
 	        month = $2 + 0
 	        day = $3 + 0
 		weight = $5
-		if(year % 4 != 0 || year == 2100) { # Good until 2400
-		    jday = julian[month] + day
+		if(year % 4 != 0 || year == 2100) { # Good until 2200
+		    jday = jdays[year] + julian[month] + day
 		} else {
-		    jday = leapyear[month] + day
+		    jday = jdays[year] + leapyear[month] + day
 		}
 		print $1 "-" $2 "-" $3 "," weight
 
-		# For seven day averages, to keep the code simple, we
-		# assume one weighing per day
-		jcounter++
-		w[jcounter] = weight # Weight on a given day
-		if(jcounter > 1) {
-			delta[jcounter] = weight - w[jcounter - 1]
+		w[jday] = weight # Weight on a given day
+		if(lastjday > 1 && (jday - lastjday) > 0) {
+                     delta[jday] = (weight - w[lastjday]) / (jday - lastjday)
 		}
+		lastjday = jday
 
 		if(zstart == -1) {zjday = jday 
 		                  zstart = weight}
 		}
 	END {avg = ((weight - zstart) / (jday - zjday)) * -1
 	     deltasum = 0
-	     for(counter = 0; counter < 7; counter++) {
-	     	deltasum += delta[jcounter - counter]
- 	     }
-	     wavg = (deltasum / counter) * -1
+	     if(w[jday - 7]) { deltasum = w[jday] - w[jday-7] }
+	     wavg = (deltasum * -1) / 7
              print "Daily weight loss (overall): " avg | "cat 1>&2"
 	     print "Daily weight loss (last week): " wavg | "cat 1>&2"
 	     }
