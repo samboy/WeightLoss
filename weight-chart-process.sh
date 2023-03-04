@@ -53,6 +53,13 @@ cat weight-chart | awk '
 		w[jday] = weight # Weight on a given day
 		if(lastjday > 1 && (jday - lastjday) > 0) {
                      delta[jday] = (weight - w[lastjday]) / (jday - lastjday)
+		     # Interpolate for missing days
+		     estimatedweight = weight
+		     for(counter = jday - 1; counter > lastjday; counter--) {
+		         delta[counter] = delta[jday]
+			 estimatedweight -= delta[jday]
+			 w[counter] = estimatedweight
+		     }
 		}
 		lastjday = jday
 
