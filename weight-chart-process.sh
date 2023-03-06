@@ -79,7 +79,7 @@ START=$( head -2 weight.csv | tail -1 | cut -f1 -d, )
 END=$( tail -1 weight.csv | cut -f1 -d, )
 
 cat > weight.gnuplot << EOF
-set terminal pdfcairo size 10in,7.5in enhanced font 'Caulixtla009Sans,28'
+set terminal pdfcairo size 10in,7.5in enhanced font 'Caulixtla009Serif,25'
 set output 'weight.pdf'
 set xdata time
 set timefmt "%Y-%m-%d"
