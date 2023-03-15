@@ -84,7 +84,7 @@ set output 'weight.pdf'
 set xdata time
 set timefmt "%Y-%m-%d"
 set xrange ["$START":"$END"]
-set yrange [165:205]
+set yrange [160:205]
 set title 'Weight loss progress 2023'
 set datafile separator ','
 set key left autotitle columnhead
