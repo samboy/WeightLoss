@@ -23,6 +23,6 @@ The chart currently has a fixed vertical scale.  This can be changed
 by editing the following line in `weight-chart-process.sh`:
 
 ```
-set yrange [165:205]
+set yrange [155:205]
 ```
 
