@@ -1,6 +1,9 @@
 # What this is
 
-This is a pretty chart showing my weight loss progress.
+This is a pretty chart showing my weight loss progress in the
+spring of 2023.  Once I hit my wight goal in early April of 2023,
+I archived this project (but still keep track of my weight in a
+private diary) because my goal has become building up muscle.
 
 # Requirements
 
